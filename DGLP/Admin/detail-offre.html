@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Détail de l'offre - DGLP
+    </title>
+
+    <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+
+            background:
+                linear-gradient(
+                    rgba(244, 246, 248, 0.94),
+                    rgba(244, 246, 248, 0.94)
+                ),
+                url("../images/dglp.jpg")
+                center center / 420px auto
+                no-repeat fixed;
+
+            background-color: #f4f6f8;
+
+            color: #263238;
+
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 255px;
+            height: 100vh;
+
+            background: #123b68;
+
+            color: white;
+
+            padding: 22px 15px;
+
+            box-shadow:
+                4px 0 15px
+                rgba(0, 0, 0, 0.12);
+
+            z-index: 1000;
+
+            overflow-y: auto;
+        }
+
+
+        .sidebar-logo {
+            text-align: center;
+
+            padding-bottom: 22px;
+
+            margin-bottom: 20px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.18);
+        }
+
+
+        .sidebar-logo img {
+            width: 92px;
+            height: 92px;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            background: white;
+
+            padding: 4px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .sidebar-logo h2 {
+            font-size: 20px;
+
+            margin-bottom: 3px;
+        }
+
+
+        .sidebar-logo span {
+            display: block;
+
+            font-size: 12px;
+
+            opacity: 0.82;
+        }
+
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+
+        .sidebar-menu li {
+            margin-bottom: 7px;
+        }
+
+
+        .sidebar-menu a {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px 13px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+
+            transition: 0.2s ease;
+        }
+
+
+        .sidebar-menu a:hover {
+            background:
+                rgba(255,255,255,0.12);
+        }
+
+
+        .sidebar-menu a.active {
+            background: white;
+
+            color: #123b68;
+
+            font-weight: bold;
+        }
+
+
+        .menu-icon {
+            width: 24px;
+
+            text-align: center;
+
+            font-size: 16px;
+        }
+
+
+        .logout-link {
+            margin-top: 20px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.18);
+        }
+
+
+        /* =====================================================
+           CONTENU PRINCIPAL
+        ===================================================== */
+
+        .main {
+            margin-left: 255px;
+
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .top-header {
+            height: 78px;
+
+            background: white;
+
+            border-bottom:
+                1px solid #e1e6eb;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 35px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 900;
+        }
+
+
+        .ministere {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+        }
+
+
+        .ministere img {
+            width: 48px;
+            height: 48px;
+
+            object-fit: contain;
+        }
+
+
+        .ministere-text strong {
+            display: block;
+
+            color: #123b68;
+
+            font-size: 15px;
+        }
+
+
+        .ministere-text span {
+            display: block;
+
+            color: #6b7785;
+
+            font-size: 12px;
+        }
+
+
+        .admin-user {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 50%;
+
+            background: #008c4a;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+
+        .admin-user strong {
+            display: block;
+
+            color: #263238;
+
+            font-size: 13px;
+        }
+
+
+        .admin-user span {
+            display: block;
+
+            color: #7a8793;
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================================
+           CONTENU
+        ===================================================== */
+
+        .content {
+            padding: 30px 35px 45px;
+
+            max-width: 1400px;
+        }
+
+
+        .breadcrumb {
+            color: #7c8995;
+
+            font-size: 12px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .breadcrumb a {
+            color: #123b68;
+
+            font-weight: bold;
+        }
+
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+
+        .page-title h1 {
+            color: #123b68;
+
+            font-size: 28px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .page-title p {
+            color: #697784;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           EN-TÊTE OFFRE
+        ===================================================== */
+
+        .offer-header {
+            background:
+                linear-gradient(
+                    135deg,
+                    #123b68,
+                    #0d2d50
+                );
+
+            color: white;
+
+            border-radius: 12px;
+
+            padding: 25px 28px;
+
+            margin-bottom: 22px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            box-shadow:
+                0 7px 20px
+                rgba(18,59,104,0.12);
+        }
+
+
+        .offer-header h2 {
+            font-size: 23px;
+
+            margin-bottom: 6px;
+        }
+
+
+        .offer-header p {
+            color:
+                rgba(255,255,255,0.78);
+
+            font-size: 13px;
+        }
+
+
+        .status-open {
+            background: #008c4a;
+
+            color: white;
+
+            padding: 8px 16px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        /* =====================================================
+           GRILLE INFORMATIONS
+        ===================================================== */
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 22px;
+        }
+
+
+        .info-card {
+            background: white;
+
+            border:
+                1px solid #e2e7ec;
+
+            border-radius: 10px;
+
+            padding: 18px;
+
+            box-shadow:
+                0 5px 18px
+                rgba(18,59,104,0.05);
+        }
+
+
+        .info-label {
+            color: #7b8994;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+        }
+
+
+        .info-value {
+            color: #123b68;
+
+            font-size: 16px;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           CARTES
+        ===================================================== */
+
+        .card {
+            background: white;
+
+            border:
+                1px solid #e2e7ec;
+
+            border-radius: 12px;
+
+            padding: 24px;
+
+            margin-bottom: 22px;
+
+            box-shadow:
+                0 5px 18px
+                rgba(18,59,104,0.06);
+        }
+
+
+        .card-header {
+            padding-bottom: 15px;
+
+            margin-bottom: 18px;
+
+            border-bottom:
+                1px solid #edf0f3;
+        }
+
+
+        .card-header h2 {
+            color: #123b68;
+
+            font-size: 19px;
+
+            margin-bottom: 3px;
+        }
+
+
+        .card-header p {
+            color: #7b8792;
+
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           TABLEAU CRITÈRES
+        ===================================================== */
+
+        .table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+
+            border:
+                1px solid #e2e7ec;
+
+            border-radius: 8px;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 700px;
+        }
+
+
+        thead {
+            background: #123b68;
+
+            color: white;
+        }
+
+
+        th {
+            padding: 13px;
+
+            text-align: left;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            white-space: nowrap;
+        }
+
+
+        td {
+            padding: 13px;
+
+            border-bottom:
+                1px solid #edf0f3;
+
+            font-size: 13px;
+
+            color: #4d5a64;
+        }
+
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        .obligatoire {
+            display: inline-block;
+
+            background: #e7f7ef;
+
+            color: #08733d;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           ACTIONS
+        ===================================================== */
+
+        .actions {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+
+        .action-card {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 18px;
+
+            border:
+                1px solid #e1e6eb;
+
+            border-radius: 9px;
+
+            background: #f8fafc;
+        }
+
+
+        .action-card h3 {
+            color: #123b68;
+
+            font-size: 15px;
+
+            margin-bottom: 3px;
+        }
+
+
+        .action-card p {
+            color: #7a8792;
+
+            font-size: 11px;
+        }
+
+
+        .action-btn {
+            display: inline-block;
+
+            background: #123b68;
+
+            color: white;
+
+            padding: 9px 14px;
+
+            border-radius: 7px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+
+            transition: 0.2s;
+        }
+
+
+        .action-btn:hover {
+            background: #0d2d50;
+
+            transform: translateY(-1px);
+        }
+
+
+        .action-btn.green {
+            background: #008c4a;
+        }
+
+
+        .action-btn.green:hover {
+            background: #006d3a;
+        }
+
+
+        /* =====================================================
+           RETOUR
+        ===================================================== */
+
+        .back-link {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #123b68;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            margin-bottom: 20px;
+        }
+
+
+        .back-link:hover {
+            color: #008c4a;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .footer {
+            margin-left: 255px;
+
+            background: #0d2d50;
+
+            color:
+                rgba(255,255,255,0.82);
+
+            text-align: center;
+
+            padding: 17px;
+
+            font-size: 11px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1150px) {
+
+            .sidebar {
+                width: 75px;
+
+                padding: 15px 8px;
+            }
+
+
+            .sidebar-logo h2,
+            .sidebar-logo span,
+            .sidebar-menu span:not(.menu-icon) {
+                display: none;
+            }
+
+
+            .sidebar-logo img {
+                width: 48px;
+                height: 48px;
+            }
+
+
+            .sidebar-menu a {
+                justify-content: center;
+
+                padding: 13px 5px;
+            }
+
+
+            .menu-icon {
+                width: auto;
+            }
+
+
+            .main {
+                margin-left: 75px;
+            }
+
+
+            .footer {
+                margin-left: 75px;
+            }
+
+
+            .info-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 760px) {
+
+            .top-header {
+                height: auto;
+
+                min-height: 75px;
+
+                padding: 12px 18px;
+            }
+
+
+            .ministere-text {
+                display: none;
+            }
+
+
+            .content {
+                padding:
+                    22px 15px 35px;
+            }
+
+
+            .page-title h1 {
+                font-size: 23px;
+            }
+
+
+            .offer-header {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .actions {
+                grid-template-columns: 1fr;
+            }
+
+
+            .card {
+                padding: 17px;
+            }
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            .admin-user > div:last-child {
+                display: none;
+            }
+
+
+            .top-header {
+                padding:
+                    11px 13px;
+            }
+
+
+            .offer-header {
+                padding: 20px;
+            }
+
+
+            .offer-header h2 {
+                font-size: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+     ===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="sidebar-logo">
+
+        <img
+            src="../images/dglp.jpg"
+            alt="Logo DGLP"
+        >
+
+        <h2>
+            DGLP
+        </h2>
+
+        <span>
+            Administration
+        </span>
+
+    </div>
+
+
+    <ul class="sidebar-menu">
+
+        <li>
+
+            <a href="dashboard.php">
+
+                <span class="menu-icon">
+                    ▣
+                </span>
+
+                <span>
+                    Tableau de bord
+                </span>
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a
+                href="offres.php"
+                class="active"
+            >
+
+                <span class="menu-icon">
+                    ▤
+                </span>
+
+                <span>
+                    Offres
+                </span>
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="candidatures.php">
+
+                <span class="menu-icon">
+                    ☷
+                </span>
+
+                <span>
+                    Candidatures
+                </span>
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="classement.php">
+
+                <span class="menu-icon">
+                    ★
+                </span>
+
+                <span>
+                    Classement
+                </span>
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="decision.php">
+
+                <span class="menu-icon">
+                    ✓
+                </span>
+
+                <span>
+                    Décisions
+                </span>
+
+            </a>
+
+        </li>
+
+
+        <li>
+
+            <a href="historique.php">
+
+                <span class="menu-icon">
+                    ◷
+                </span>
+
+                <span>
+                    Historique
+                </span>
+
+            </a>
+
+        </li>
+
+
+        <li class="logout-link">
+
+            <a href="deconnexion.php">
+
+                <span class="menu-icon">
+                    ↪
+                </span>
+
+                <span>
+                    Déconnexion
+                </span>
+
+            </a>
+
+        </li>
+
+    </ul>
+
+</aside>
+
+
+<!-- =====================================================
+     CONTENU PRINCIPAL
+     ===================================================== -->
+
+<div class="main">
+
+
+    <!-- =================================================
+         HEADER
+         ================================================= -->
+
+    <header class="top-header">
+
+        <div class="ministere">
+
+            <img
+                src="../images/ministere.jpg"
+                alt="Logo du ministère"
+            >
+
+            <div class="ministere-text">
+
+                <strong>
+                    Ministère du Commerce,
+                    des PME/PMI et de l'Entrepreneuriat
+                </strong>
+
+                <span>
+                    Direction Générale de la Lutte contre la Pauvreté
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="admin-user">
+
+            <div class="admin-avatar">
+                AP
+            </div>
+
+            <div>
+
+                <strong>
+                    Administrateur Principal
+                </strong>
+
+                <span>
+                    Administrateur
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =================================================
+         CONTENU
+         ================================================= -->
+
+    <main class="content">
+
+
+        <a
+            href="offres.php"
+            class="back-link"
+        >
+
+            ← Retour aux offres
+
+        </a>
+
+
+        <div class="page-title">
+
+            <div class="breadcrumb">
+
+                <a href="dashboard.php">
+                    Administration
+                </a>
+
+                &nbsp; / &nbsp;
+
+                <a href="offres.php">
+                    Offres
+                </a>
+
+                &nbsp; / &nbsp;
+
+                Détail
+
+            </div>
+
+            <h1>
+                Détail de l'offre
+            </h1>
+
+            <p>
+                Consultez les informations et les critères
+                d'éligibilité du programme.
+            </p>
+
+        </div>
+
+
+        <!-- =================================================
+             EN-TÊTE DE L'OFFRE
+             ================================================= -->
+
+        <section class="offer-header">
+
+            <div>
+
+                <h2>
+                    Programme d'appui aux AGR
+                </h2>
+
+                <p>
+                    Offre de services de la Direction Générale
+                    de la Lutte contre la Pauvreté
+                </p>
+
+            </div>
+
+
+            <span class="status-open">
+                ● Ouverte
+            </span>
+
+        </section>
+
+
+        <!-- =================================================
+             INFORMATIONS PRINCIPALES
+             ================================================= -->
+
+        <section class="info-grid">
+
+
+            <div class="info-card">
+
+                <div class="info-label">
+                    Date d'ouverture
+                </div>
+
+                <div class="info-value">
+                    01/10/2026
+                </div>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="info-label">
+                    Date de fermeture
+                </div>
+
+                <div class="info-value">
+                    31/10/2026
+                </div>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="info-label">
+                    Nombre de places
+                </div>
+
+                <div class="info-value">
+                    50 places
+                </div>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <div class="info-label">
+                    Statut
+                </div>
+
+                <div
+                    class="info-value"
+                    style="color:#008c4a;"
+                >
+                    Ouverte
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CRITÈRES
+             ================================================= -->
+
+        <section class="card">
+
+            <div class="card-header">
+
+                <h2>
+                    Critères d'éligibilité
+                </h2>
+
+                <p>
+                    Conditions à respecter pour pouvoir
+                    bénéficier de cette offre.
+                </p>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Critère
+                            </th>
+
+                            <th>
+                                Condition
+                            </th>
+
+                            <th>
+                                Valeur attendue
+                            </th>
+
+                            <th>
+                                Caractère
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    Âge
+                                </strong>
+                            </td>
+
+                            <td>
+                                Entre
+                            </td>
+
+                            <td>
+                                18 - 35 ans
+                            </td>
+
+                            <td>
+
+                                <span class="obligatoire">
+                                    Obligatoire
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    Résidence
+                                </strong>
+                            </td>
+
+                            <td>
+                                Égal à
+                            </td>
+
+                            <td>
+                                Gabon
+                            </td>
+
+                            <td>
+
+                                <span class="obligatoire">
+                                    Obligatoire
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <td>
+                                <strong>
+                                    Qualification
+                                </strong>
+                            </td>
+
+                            <td>
+                                Égal à
+                            </td>
+
+                            <td>
+                                Oui
+                            </td>
+
+                            <td>
+
+                                <span class="obligatoire">
+                                    Obligatoire
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ACTIONS
+             ================================================= -->
+
+        <section class="card">
+
+            <div class="card-header">
+
+                <h2>
+                    Actions
+                </h2>
+
+                <p>
+                    Accédez directement aux candidatures
+                    associées à cette offre.
+                </p>
+
+            </div>
+
+
+            <div class="actions">
+
+
+                <div class="action-card">
+
+                    <div>
+
+                        <h3>
+                            Candidatures
+                        </h3>
+
+                        <p>
+                            Consulter les candidatures
+                            reçues pour cette offre.
+                        </p>
+
+                    </div>
+
+
+                    <a
+                        href="candidatures.php"
+                        class="action-btn"
+                    >
+
+                        Voir les candidatures
+
+                    </a>
+
+                </div>
+
+
+                <div class="action-card">
+
+                    <div>
+
+                        <h3>
+                            Classement
+                        </h3>
+
+                        <p>
+                            Consulter le classement
+                            des candidats.
+                        </p>
+
+                    </div>
+
+
+                    <a
+                        href="classement.php"
+                        class="action-btn green"
+                    >
+
+                        Voir le classement
+
+                    </a>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<!-- =====================================================
+     FOOTER
+     ===================================================== -->
+
+<footer class="footer">
+
+    © 2026 Direction Générale de la Lutte contre la Pauvreté
+
+</footer>
+
+
+</body>
+
+</html>

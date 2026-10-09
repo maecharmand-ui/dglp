@@ -1,0 +1,819 @@
+Oui. Si l'objectif est d'avoir **une seule BDD complète pour les 3 membres**, je partirais de ta base `dglp` et j'intégrerais la partie éligibilité du 3ᵉ collègue, tout en ajoutant ce qui manque pour couvrir les exigences de votre projet.
+
+Je garderais **tes noms de tables et tes clés `id_candidat`, `id_offre`, etc.** pour éviter de casser ce que vous avez déjà commencé.
+
+## Structure complète proposée
+
+Je partirais sur **16 tables** :
+
+```text
+1.  admin
+2.  candidat
+3.  compte
+4.  dossier
+5.  offre
+6.  critere
+7.  piece_complementaire
+8.  piece_candidature
+9.  candidature
+10. controle_eligibilite
+11. verification
+12. decision
+13. classement
+14. historique
+15. orientation
+16. suivi_parcours
+```
+
+Et la logique générale serait :
+
+```text
+                         ADMIN
+                           │
+          ┌────────────────┼─────────────────┐
+          │                │                 │
+          ↓                ↓                 ↓
+        OFFRE          HISTORIQUE        ORIENTATION
+          │
+     ┌────┼──────────────┐
+     ↓    ↓              ↓
+ CRITERE PIECE       CANDIDATURE
+        COMPLEMENTAIRE    │
+                           │
+                           ↓
+                       CANDIDAT
+                      ┌────┴────┐
+                      ↓         ↓
+                   COMPTE     DOSSIER
+                                 │
+                                 ↓
+                       CONTROLE_ELIGIBILITE
+                           │          │
+                           ↓          ↓
+                     VERIFICATION  DECISION
+                           │
+                           ↓
+                        CRITERE
+                           
+CANDIDATURE
+     │
+     ├── PIECE_CANDIDATURE
+     │
+     └── CLASSEMENT
+              │
+              ↓
+        SUIVI_PARCOURS
+```
+
+---
+
+# 1. `admin`
+
+Pour les agents administratifs.
+
+```sql
+CREATE TABLE admin (
+    id_admin INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    mot_de_passe VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL DEFAULT 'Agent',
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+```
+
+On évite donc d'avoir `admin` **et** `utilisateur` séparément.
+
+Le `role` permet :
+
+```text
+Admin en chef
+Agent
+Commission
+...
+```
+
+---
+
+# 2. `candidat`
+
+On garde ta table, avec les informations générales du candidat.
+
+```sql
+CREATE TABLE candidat (
+    id_candidat INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    ville VARCHAR(100),
+    date_naissance DATE,
+    province VARCHAR(100),
+    sexe VARCHAR(20),
+    date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+```
+
+---
+
+# 3. `compte`
+
+Pour la connexion du candidat.
+
+```sql
+CREATE TABLE compte (
+    id_compte INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    mot_de_passe VARCHAR(255) NOT NULL,
+    statut VARCHAR(30) NOT NULL DEFAULT 'En attente',
+    id_candidat INT NOT NULL UNIQUE,
+
+    CONSTRAINT fk_compte_candidat
+        FOREIGN KEY (id_candidat)
+        REFERENCES candidat(id_candidat)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+```
+
+Le `statut` permet :
+
+```text
+En attente
+Validé
+Bloqué
+```
+
+Ça couvre votre exigence :
+
+> le compte doit être validé avant de pouvoir candidater.
+
+---
+
+# 4. `dossier`
+
+Ta table est déjà assez complète.
+
+Je rajouterais `revenu_mensuel` et `qualification`, car le moteur d'éligibilité peut en avoir besoin.
+
+```sql
+CREATE TABLE dossier (
+    id_dossier INT AUTO_INCREMENT PRIMARY KEY,
+
+    nip VARCHAR(50),
+    carte_photo VARCHAR(255),
+    acte_naissance VARCHAR(255),
+
+    statut VARCHAR(50) NOT NULL,
+
+    situation_matrimoniale VARCHAR(100),
+    personn_a_charge INT,
+    situation_profesionnelle VARCHAR(100),
+
+    revenu_mensuel DECIMAL(12,2),
+    qualification VARCHAR(150),
+
+    activite VARCHAR(100),
+    type_activite VARCHAR(100),
+    description_activite VARCHAR(255),
+
+    id_candidat INT NOT NULL UNIQUE,
+    id_admin INT,
+
+    CONSTRAINT fk_dossier_candidat
+        FOREIGN KEY (id_candidat)
+        REFERENCES candidat(id_candidat)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_dossier_admin
+        FOREIGN KEY (id_admin)
+        REFERENCES admin(id_admin)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+```
+
+---
+
+# 5. `offre`
+
+Je conserverais ta table.
+
+```sql
+CREATE TABLE offre (
+    id_offre INT AUTO_INCREMENT PRIMARY KEY,
+
+    nom VARCHAR(150) NOT NULL,
+    description TEXT NOT NULL,
+
+    date_creation DATE NOT NULL,
+    date_limite_candidature DATE NOT NULL,
+
+    nombre_place INT NOT NULL,
+    montant DECIMAL(12,2),
+
+    document_supplementaire TINYINT(1) DEFAULT 0,
+
+    statut VARCHAR(50) NOT NULL,
+
+    id_admin INT NOT NULL,
+
+    CONSTRAINT fk_offre_admin
+        FOREIGN KEY (id_admin)
+        REFERENCES admin(id_admin)
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+```
+
+---
+
+# 6. `critere`
+
+**Très important pour le 3ᵉ collègue.**
+
+Au lieu d'avoir tous les critères dans `offre.critere`, on les sépare.
+
+```sql
+CREATE TABLE critere (
+    id_critere INT AUTO_INCREMENT PRIMARY KEY,
+
+    id_offre INT NOT NULL,
+
+    nom VARCHAR(150) NOT NULL,
+    description TEXT,
+
+    valeur_min DECIMAL(12,2),
+    valeur_max DECIMAL(12,2),
+    valeur_attendue VARCHAR(255),
+
+    poids DECIMAL(5,2) DEFAULT 1,
+
+    obligatoire TINYINT(1) DEFAULT 1,
+
+    CONSTRAINT fk_critere_offre
+        FOREIGN KEY (id_offre)
+        REFERENCES offre(id_offre)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+```
+
+Exemple :
+
+```text
+OFFRE : Programme d'appui aux AGR
+
+CRITERES :
+
+Âge
+18 → 35
+
+Résidence
+Gabon
+
+Qualification
+BAC minimum
+
+Revenu
+0 → 150000
+```
+
+---
+
+# 7. `piece_complementaire`
+
+Cette table définit les pièces demandées par une offre.
+
+```sql
+CREATE TABLE piece_complementaire (
+    id_piece INT AUTO_INCREMENT PRIMARY KEY,
+
+    nom_piece VARCHAR(150) NOT NULL,
+    obligatoire TINYINT(1) DEFAULT 0,
+
+    id_offre INT NOT NULL,
+
+    CONSTRAINT fk_piece_offre
+        FOREIGN KEY (id_offre)
+        REFERENCES offre(id_offre)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+```
+
+Exemple :
+
+```text
+Offre AGR
+
+- CV                  obligatoire
+- Attestation         obligatoire
+- Certificat          facultatif
+```
+
+---
+
+# 8. `piece_candidature`
+
+⚠️ **Celle-ci manquait dans vos deux bases.**
+
+`piece_complementaire` dit **quelle pièce l'offre demande**.
+
+Mais il faut une table pour dire **quelle pièce le candidat a effectivement envoyée**.
+
+```sql
+CREATE TABLE piece_candidature (
+    id_piece_candidature INT AUTO_INCREMENT PRIMARY KEY,
+
+    id_piece INT NOT NULL,
+    id_candidature INT NOT NULL,
+
+    fichier VARCHAR(255) NOT NULL,
+    statut VARCHAR(50) DEFAULT 'En attente',
+
+    date_depot TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_pc_piece
+        FOREIGN KEY (id_piece)
+        REFERENCES piece_complementaire(id_piece)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_pc_candidature
+        FOREIGN KEY (id_candidature)
+        REFERENCES candidature(id_candidature)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+```
+
+Donc :
+
+```text
+piece_complementaire
+        ↓
+"CV obligatoire"
+
+piece_candidature
+        ↓
+"C:\uploads\cv_jean.pdf"
+```
+
+---
+
+# 9. `candidature`
+
+Ta table, mais enrichie avec le numéro de candidature.
+
+```sql
+CREATE TABLE candidature (
+    id_candidature INT AUTO_INCREMENT PRIMARY KEY,
+
+    numero_candidature VARCHAR(50) NOT NULL UNIQUE,
+
+    date_candidature TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    statut VARCHAR(50) NOT NULL DEFAULT 'En attente',
+
+    date_accuse_reception TIMESTAMP NULL,
+
+    id_candidat INT NOT NULL,
+    id_offre INT NOT NULL,
+
+    CONSTRAINT uq_candidat_offre
+        UNIQUE (id_candidat, id_offre),
+
+    CONSTRAINT fk_candidature_candidat
+        FOREIGN KEY (id_candidat)
+        REFERENCES candidat(id_candidat)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_candidature_offre
+        FOREIGN KEY (id_offre)
+        REFERENCES offre(id_offre)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+```
+
+Exemple :
+
+```text
+CAND-2026-000001
+```
+
+Ça permet de générer l'accusé de réception.
+
+---
+
+# 10. `controle_eligibilite`
+
+C'est le cœur du travail du 3ᵉ collègue.
+
+```sql
+CREATE TABLE controle_eligibilite (
+    id_controle INT AUTO_INCREMENT PRIMARY KEY,
+
+    id_candidature INT NOT NULL,
+
+    score DECIMAL(5,2) DEFAULT 0,
+
+    statut VARCHAR(50) NOT NULL DEFAULT 'À examiner',
+
+    justification TEXT,
+
+    date_controle TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_controle_candidature
+        FOREIGN KEY (id_candidature)
+        REFERENCES candidature(id_candidature)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+```
+
+Statuts possibles :
+
+```text
+À examiner
+Éligible
+Non éligible
+Examiné
+En attente
+```
+
+---
+
+# 11. `verification`
+
+Permet de vérifier **chaque critère individuellement**.
+
+```sql
+CREATE TABLE verification (
+    id_verification INT AUTO_INCREMENT PRIMARY KEY,
+
+    id_controle INT NOT NULL,
+    id_critere INT NOT NULL,
+
+    resultat VARCHAR(50) NOT NULL DEFAULT 'Non vérifié',
+
+    observation TEXT,
+
+    date_verification TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_verification_controle
+        FOREIGN KEY (id_controle)
+        REFERENCES controle_eligibilite(id_controle)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_verification_critere
+        FOREIGN KEY (id_critere)
+        REFERENCES critere(id_critere)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+```
+
+Exemple :
+
+```text
+CAND-001
+
+Âge             → Respecté
+Résidence       → Respecté
+Qualification   → Respecté
+Revenu          → Non respecté
+```
+
+---
+
+# 12. `decision`
+
+Pour la décision finale de l'agent/commission.
+
+```sql
+CREATE TABLE decision (
+    id_decision INT AUTO_INCREMENT PRIMARY KEY,
+
+    id_controle INT NOT NULL UNIQUE,
+
+    id_admin INT,
+
+    decision_finale VARCHAR(50) NOT NULL,
+
+    motif TEXT,
+
+    date_decision TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_decision_controle
+        FOREIGN KEY (id_controle)
+        REFERENCES controle_eligibilite(id_controle)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_decision_admin
+        FOREIGN KEY (id_admin)
+        REFERENCES admin(id_admin)
+        ON DELETE SET NULL
+) ENGINE=InnoDB;
+```
+
+---
+
+# 13. `classement`
+
+Pour le travail du 3ᵉ collègue.
+
+```sql
+CREATE TABLE classement (
+    id_classement INT AUTO_INCREMENT PRIMARY KEY,
+
+    id_candidature INT NOT NULL UNIQUE,
+
+    rang INT NOT NULL,
+
+    score DECIMAL(5,2) DEFAULT 0,
+
+    statut VARCHAR(50) NOT NULL,
+
+    justification TEXT,
+
+    date_classement TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_classement_candidature
+        FOREIGN KEY (id_candidature)
+        REFERENCES candidature(id_candidature)
+        ON DELETE CASCADE
+) ENGINE=InnoDB;
+```
+
+Exemple :
+
+```text
+1 → Jean → 95
+2 → Paul → 87
+3 → Marc → 81
+```
+
+---
+
+# 14. `historique`
+
+Pour la traçabilité.
+
+```sql
+CREATE TABLE historique (
+    id_historique INT AUTO_INCREMENT PRIMARY KEY,
+
+    id_admin INT,
+
+    id_candidature INT,
+
+    action VARCHAR(150) NOT NULL,
+
+    description TEXT,
+
+    date_action TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_historique_admin
+        FOREIGN KEY (id_admin)
+        REFERENCES admin(id_admin)
+        ON DELETE SET NULL,
+
+    CONSTRAINT fk_historique_candidature
+        FOREIGN KEY (id_candidature)
+        REFERENCES candidature(id_candidature)
+        ON DELETE SET NULL
+) ENGINE=InnoDB;
+```
+
+Exemple :
+
+```text
+12/09 → Candidature créée
+13/09 → Dossier contrôlé
+13/09 → Critères vérifiés
+14/09 → Décision prise
+14/09 → Candidat classé
+```
+
+---
+
+# 15. `orientation`
+
+Je l'ajouterais parce que votre cahier des charges prévoit **AGT-04 Orientation**.
+
+```sql
+CREATE TABLE orientation (
+    id_orientation INT AUTO_INCREMENT PRIMARY KEY,
+
+    id_candidature INT NOT NULL,
+    id_admin INT,
+
+    orientation VARCHAR(150) NOT NULL,
+    commentaire TEXT,
+
+    date_orientation TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_orientation_candidature
+        FOREIGN KEY (id_candidature)
+        REFERENCES candidature(id_candidature)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_orientation_admin
+        FOREIGN KEY (id_admin)
+        REFERENCES admin(id_admin)
+        ON DELETE SET NULL
+) ENGINE=InnoDB;
+```
+
+---
+
+# 16. `suivi_parcours`
+
+Pour AGT-05 et AGT-06 :
+
+> accompagnement + suivi du parcours.
+
+```sql
+CREATE TABLE suivi_parcours (
+    id_suivi INT AUTO_INCREMENT PRIMARY KEY,
+
+    id_candidature INT NOT NULL,
+    id_admin INT,
+
+    type_suivi VARCHAR(100) NOT NULL,
+
+    description TEXT,
+
+    statut VARCHAR(50) NOT NULL DEFAULT 'En cours',
+
+    date_suivi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_suivi_candidature
+        FOREIGN KEY (id_candidature)
+        REFERENCES candidature(id_candidature)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_suivi_admin
+        FOREIGN KEY (id_admin)
+        REFERENCES admin(id_admin)
+        ON DELETE SET NULL
+) ENGINE=InnoDB;
+```
+
+Cela permet par exemple :
+
+```text
+Candidat : Jean
+
+Accompagnement
+→ Tuteur affecté
+
+Formation
+→ Formation entrepreneuriat
+
+Suivi
+→ En cours
+
+Date
+→ 20/09/2026
+```
+
+---
+
+# Répartition des 3 membres
+
+Avec ces tables, vos trois parties deviennent beaucoup plus propres.
+
+### 👤 Toi — plateforme candidat / frontend
+
+Tu travailles principalement avec :
+
+```text
+candidat
+compte
+dossier
+offre
+piece_complementaire
+piece_candidature
+candidature
+```
+
+Ton parcours :
+
+```text
+Inscription
+   ↓
+Connexion
+   ↓
+Offres
+   ↓
+Détail offre
+   ↓
+Dossier
+   ↓
+Postuler
+   ↓
+Pièces complémentaires
+   ↓
+Accusé de réception
+   ↓
+Suivi candidature
+```
+
+---
+
+### 👤 Collègue 2 — administration
+
+Principalement :
+
+```text
+admin
+offre
+candidature
+dossier
+orientation
+suivi_parcours
+historique
+```
+
+Il peut gérer :
+
+```text
+Dashboard
+Offres
+Candidatures
+Dossiers
+Validation
+Orientation
+Accompagnement
+Suivi
+```
+
+---
+
+### 👤 Collègue 3 — éligibilité / classement
+
+Principalement :
+
+```text
+critere
+controle_eligibilite
+verification
+decision
+classement
+historique
+```
+
+Son parcours :
+
+```text
+Choisir une offre
+       ↓
+Voir candidatures
+       ↓
+Examiner candidature
+       ↓
+Récupérer dossier
+       ↓
+Vérifier critères
+       ↓
+Calculer score
+       ↓
+Éligible / Non éligible
+       ↓
+Décision
+       ↓
+Classement
+       ↓
+Historique
+```
+
+---
+
+## Les 16 tables finales
+
+Donc, si vous voulez une BDD **complète et cohérente pour les trois**, je partirais sur :
+
+```text
+01. admin
+02. candidat
+03. compte
+04. dossier
+05. offre
+06. critere
+07. piece_complementaire
+08. piece_candidature
+09. candidature
+10. controle_eligibilite
+11. verification
+12. decision
+13. classement
+14. historique
+15. orientation
+16. suivi_parcours
+```
+
+**C'est cette architecture que je recommande comme base de travail commune.**
+
+Le point important est qu'on ne crée pas `utilisateur`, `offre_service`, etc. en parallèle de tes tables actuelles : **on fusionne les fonctionnalités dans votre BDD `dglp`**, avec des noms cohérents. Cela évite que chacun développe sa partie sur des tables différentes.

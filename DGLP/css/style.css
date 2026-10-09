@@ -1,0 +1,497 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f1ec;
+    color: #3e362c;
+    line-height: 1.6;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    background-color: #e2dfda;
+    border-bottom: 1px solid #d0cbc4;
+    padding: 18px 6%;
+}
+
+header > section,
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: blueviolet;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+nav a {
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+nav a:hover {
+    color: blueviolet;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    width: min(1100px, 90%);
+    margin: 40px auto;
+}
+
+section {
+    margin-bottom: 40px;
+}
+
+
+/* =========================
+   TITRES
+========================= */
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+h3 {
+    margin-bottom: 10px;
+}
+
+
+/* =========================
+   ACCUEIL
+========================= */
+
+.hero {
+    padding: 70px 40px;
+    text-align: center;
+    background-color: #ebe6df;
+    border-radius: 12px;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+}
+
+.hero p {
+    max-width: 750px;
+    margin: 0 auto 25px;
+}
+
+.hero a {
+    display: inline-block;
+    background-color: blueviolet;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 7px;
+    font-weight: bold;
+}
+
+.hero a:hover {
+    opacity: 0.9;
+}
+
+
+/* =========================
+   CARTES
+========================= */
+
+.cartes,
+.étapes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.étapes {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.cartes article,
+.étapes article,
+.offre,
+.offre-selectionnee,
+.classement-candidats {
+    background-color: white;
+    border: 1px solid #ddd6ce;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.cartes article:hover,
+.étapes article:hover {
+    transform: translateY(-2px);
+    transition: 0.2s;
+}
+
+
+/* =========================
+   OFFRES
+========================= */
+
+.offres-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.carte-offre {
+    background-color: white;
+    border: 1px solid #ddd6ce;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.carte-offre h2 {
+    color: blueviolet;
+}
+
+.carte-offre a {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 9px 16px;
+    background-color: blueviolet;
+    color: white;
+    border-radius: 6px;
+}
+
+
+/* =========================
+   FORMULAIRES
+========================= */
+
+.formulaire-inscription,
+.formulaire-connexion,
+.mon-dossier,
+.informations-candidat,
+.informations-administratives,
+.situation-sociale,
+.activite,
+.etat-dossier {
+    background-color: white;
+    border: 1px solid #ddd6ce;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.formulaire-inscription,
+.formulaire-connexion {
+    max-width: 600px;
+    margin: 25px auto;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #cfc8bf;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: blueviolet;
+}
+
+
+/* =========================
+   BOUTONS
+========================= */
+
+button,
+.btn {
+    display: inline-block;
+    border: none;
+    background-color: blueviolet;
+    color: white;
+    padding: 11px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover,
+.btn:hover {
+    opacity: 0.9;
+}
+
+
+/* =========================
+   ESPACE CANDIDAT
+========================= */
+
+.bienvenue {
+    background-color: #ebe6df;
+    border-radius: 10px;
+    padding: 35px;
+}
+
+.etat-dossier,
+.mes-candidatures,
+.offres {
+    background-color: white;
+    border: 1px solid #ddd6ce;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.etat-dossier a,
+.mes-candidatures a,
+.offres a {
+    display: inline-block;
+    margin-top: 15px;
+    color: blueviolet;
+    font-weight: bold;
+}
+
+
+/* =========================
+   DOSSIER
+========================= */
+
+.mon-dossier {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.informations-candidat {
+    display: grid;
+    gap: 8px;
+}
+
+.photo-candidat {
+    width: 130px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed #aaa;
+    margin-bottom: 15px;
+    background-color: #f7f5f2;
+}
+
+
+/* =========================
+   TABLEAUX
+========================= */
+
+.candidatures {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+.candidatures th,
+.candidatures td {
+    padding: 13px;
+    border: 1px solid #ddd6ce;
+    text-align: left;
+}
+
+.candidatures th {
+    background-color: #e2dfda;
+}
+
+.candidatures tr:hover {
+    background-color: #f7f5f2;
+}
+
+
+/* =========================
+   STATUTS
+========================= */
+
+.statut {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.statut-incomplet {
+    background-color: #eee8df;
+}
+
+.statut-attente {
+    background-color: #eee8df;
+}
+
+.statut-eligible {
+    background-color: #e6f0e6;
+}
+
+.statut-non-eligible {
+    background-color: #f2e4e4;
+}
+
+
+/* =========================
+   ADMINISTRATION
+========================= */
+
+.h1-admin {
+    margin-bottom: 30px;
+}
+
+.admin-dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.admin-card {
+    background-color: white;
+    border: 1px solid #ddd6ce;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.admin-card .nombre {
+    font-size: 2rem;
+    font-weight: bold;
+    color: blueviolet;
+}
+
+
+/* =========================
+   MESSAGES
+========================= */
+
+.message {
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    background-color: #eee8df;
+}
+
+.message-erreur {
+    border-left: 4px solid #a33;
+}
+
+.message-succes {
+    border-left: 4px solid #4d7c4d;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+    margin-top: 60px;
+    padding: 25px;
+    text-align: center;
+    background-color: #e2dfda;
+    color: #62594f;
+}
+
+
+/* =========================
+   RESPONSIVE SIMPLE
+========================= */
+
+@media (max-width: 800px) {
+
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .cartes,
+    .étapes,
+    .offres-container,
+    .admin-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .candidatures {
+        font-size: 0.9rem;
+    }
+
+}
+
+.photo-candidat {
+    width: 160px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+}
+
+.photo-candidat img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
