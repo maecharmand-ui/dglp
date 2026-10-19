@@ -1162,6 +1162,19 @@ $candidatures_recentes = $requete->fetchAll(PDO::FETCH_ASSOC);
 
             </a>
 
+            <a
+              href="decision.php"
+                class="menu-item"
+>
+                 <span class="menu-icon">
+                    ✓
+                </span>
+
+                <span>
+                    Décisions
+                </span>
+            </a>
+
 
             <a
                 href="historique.php"
@@ -1178,6 +1191,23 @@ $candidatures_recentes = $requete->fetchAll(PDO::FETCH_ASSOC);
 
             </a>
 
+
+<?php if (isset($_SESSION["id_admin"])): ?>
+    <?php
+    $requeteRole = $pdo->prepare(
+        "SELECT role FROM admin WHERE id_admin = ?"
+    );
+    $requeteRole->execute([$_SESSION["id_admin"]]);
+    $roleMenu = $requeteRole->fetchColumn();
+    ?>
+
+    <?php if ($roleMenu === "super_admin"): ?>
+        <a href="roles.php" class="menu-item">
+            <span class="menu-icon">⚙</span>
+            <span>Gestion des rôles</span>
+        </a>
+    <?php endif; ?>
+<?php endif; ?>
 
             <div class="menu-separator"></div>
 

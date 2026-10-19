@@ -1,3 +1,4 @@
+
 <?php
 
 session_start();
@@ -5,12 +6,19 @@ require_once "../../database.php";
 
 /* =========================================================
    VÉRIFIER QUE L'ADMINISTRATEUR EST CONNECTÉ
-   ========================================================= */
+========================================================= */
 
 if (!isset($_SESSION["id_admin"])) {
     header("Location: connexion.php");
     exit;
 }
+
+/* =========================================================
+   VÉRIFIER LES PERMISSIONS D'ACCÈS
+========================================================= */
+
+require_once "verifier-permission.php";
+
 
 /* =========================================================
    RÉCUPÉRER TOUTES LES OFFRES

@@ -13,6 +13,7 @@ if (!isset($_SESSION["id_admin"])) {
     exit;
 }
 
+require_once "verifier-permission.php";
 
 /* =========================================================
    MESSAGE

@@ -13,6 +13,7 @@ if (!isset($_SESSION["id_admin"])) {
     header("Location: connexion.php");
     exit;
 }
+require_once "verifier-permission.php";
 
 /* =========================================================
    VARIABLES

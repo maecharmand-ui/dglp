@@ -311,37 +311,44 @@ if ($nomAdmin === "") {
    14. Classe de statut
    ========================================================= */
 
+
 function classeStatut($statut)
 {
-    $statut = strtolower(trim((string) $statut));
+    $statut = trim((string) $statut);
 
-    if (
-        $statut === "éligible" ||
-        $statut === "eligible" ||
-        $statut === "soumise"
-    ) {
+    // Normaliser les caractères pour faciliter les comparaisons.
+    $statut = mb_strtolower($statut, "UTF-8");
+
+    if (in_array($statut, [
+        "éligible",
+        "eligible",
+        "soumise",
+        "acceptée",
+        "acceptee"
+    ], true)) {
         return "status-success";
     }
 
-    if (
-        $statut === "non éligible" ||
-        $statut === "non eligible"
-    ) {
+    if (in_array($statut, [
+        "non éligible",
+        "non eligible"
+    ], true)) {
         return "status-danger";
     }
 
-    if (
-        $statut === "en attente" ||
-        $statut === "à examiner" ||
-        $statut === "a examiner" ||
-        $statut === "à compléter" ||
-        $statut === "a compléter"
-    ) {
+    if (in_array($statut, [
+        "en attente",
+        "à examiner",
+        "a examiner",
+        "à compléter",
+        "a completer"
+    ], true)) {
         return "status-warning";
     }
 
     return "status-neutral";
 }
+
 
 ?>
 
@@ -2933,10 +2940,17 @@ function classeStatut($statut)
                         ✓ Contrôle d'éligibilité
                     </a>
 
-                    <?php if (
-                        $controle &&
-                        $controle["statut"] === "Éligible"
-                    ): ?>
+                    <?php
+$statutControle = mb_strtolower(
+    trim((string) ($controle["statut"] ?? "")),
+    "UTF-8"
+);
+?>
+
+<?php if (
+    $controle &&
+    in_array($statutControle, ["éligible", "eligible"], true)
+): ?>
 
                         <a
                             href="classement.php?id=<?= $id_candidature ?>"
